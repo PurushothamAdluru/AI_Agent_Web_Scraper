@@ -1,0 +1,377 @@
+{
+  "name": "Google maps v2",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"search\": \"landscaping\",\n  \"location\": \"New York\",\n  \"state\": \"NY\",\n  \"country\": \"us\"\n}\n"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5f1a81f2-989a-4933-82ed-9dd676fc38d3",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/2Mdma1N6Fd0y3QEjR/runs?waitForFinish=300",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer apify_api_MKTOtfjiYwPyMaboGqqjR6ZdNTaaHz1HoZF5"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"language\": \"en\",\n    \"locationQuery\": \"{{ $json.location }},{{ $json.state }},{{ $json.country }} \",\n    \"maxCrawledPlacesPerSearch\": 50,\n    \"searchStringsArray\": [\n        \"{{ $json.search }}\"\n    ],\n    \"skipClosedPlaces\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "843be65c-f285-4c07-9429-e208b8fa0a63",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer apify_api_MKTOtfjiYwPyMaboGqqjR6ZdNTaaHz1HoZF5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "9f125236-5c70-426e-a53e-0cadc52a5cbd",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1OGYRtJAaq1F4sbG0qZ7csDrWYVQNIaKg_VucdJW9Y1E",
+          "mode": "list",
+          "cachedResultName": "agent",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OGYRtJAaq1F4sbG0qZ7csDrWYVQNIaKg_VucdJW9Y1E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OGYRtJAaq1F4sbG0qZ7csDrWYVQNIaKg_VucdJW9Y1E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NAME": "={{ $json.title }}",
+            "PHONE": "={{ $json.phoneUnformatted }}",
+            "SERVICE": "={{ $('When Executed by Another Workflow').item.json.search }}",
+            "CITY": "={{ $json.city }}",
+            "URL": "={{ $json.website }}",
+            "PLATFORM": "Google Maps",
+            "ID": "={{ $json.website }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SERVICE",
+              "displayName": "SERVICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "PHONE",
+              "displayName": "PHONE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CITY",
+              "displayName": "CITY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "PLATFORM",
+              "displayName": "PLATFORM",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        660,
+        0
+      ],
+      "id": "da50b263-0169-42ed-8813-17e3d7bb9120",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "nRRKJq05g9qgssmL",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ],
+      "id": "031092b4-ccc5-41c5-898f-7c16dc068e72",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "⚡Triggered by AI Agent from AI Prompt Handler Workflow\n \nThis workflow starts in the background.\n\n",
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -200
+      ],
+      "id": "c3caccf8-46f6-4f58-bc23-759ebacee408",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "🌍 HTTP Request (Apify)\n\n Starts a scraper run on Apify using prompt details.",
+        "height": 140,
+        "width": 150,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        200,
+        -200
+      ],
+      "id": "7f783f47-e53d-44bf-af5a-8a53b7c96de0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "📥 HTTP Fetch \n\n Pulls the scraped business data (up to 50 items).",
+        "height": 140,
+        "width": 150,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -200
+      ],
+      "id": "1f2ea05a-d10d-4959-98bd-3b6696e890d8",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "📊 Google Sheets \n\n Appends results like name, phone, URL, city, etc., to a live spreadsheet.",
+        "height": 140,
+        "width": 150,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -200
+      ],
+      "id": "8b3a6690-8d44-4cf1-ae2a-90d23caf22e5",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "📦 Aggregate (Optional) \n\n Prepares the data for future use or summaries.",
+        "height": 140,
+        "width": 150,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        860,
+        -200
+      ],
+      "id": "47ad31f4-cf49-410c-83ca-a86fbca8b5d5",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "🌐Google Maps Scraper Workflow",
+        "height": 80,
+        "width": 270,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -320
+      ],
+      "id": "99fe2682-3443-4100-938e-d04f5a40cf6d",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "search": "landscaping",
+          "location": "New York",
+          "state": "NY",
+          "country": "us"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "15c182f4-bad1-4494-957a-20dde3f40c96",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6dd6f6873b475621fba8303fa7dff6507ea0b1f80ecd65d4c62a0ac5c528618c"
+  },
+  "id": "6hF01tKGvCDNOL2l",
+  "tags": []
+}
